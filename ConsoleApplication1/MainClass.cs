@@ -1,11 +1,14 @@
-﻿namespace ConsoleApplication1
+﻿// <copyright file="MainClass.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace ConsoleApplication1
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using CsvHelper;
 
     internal class MainClass
     {
@@ -16,50 +19,24 @@
             const int パー = 3;
 
             Console.WriteLine("複数人じゃんけんゲーム");
-
-            bool zokko = true;
-
-            do
+            while (true)
             {
+                var append = true;
+                var csv = new CsvWriter(new StreamWriter("C:\\dev\\csv\\jyanken.csv", append));
                 Console.WriteLine("プレイヤーの人数を１人～４人で選択してください>>>");
-
-                string x;
-                x = Console.ReadLine();
-                if (x == "1" || x == "2" || x == "3" || x == "4")
-                {
-                }
-                else
-                {
-                    Console.WriteLine("誤ったキーが選択されました");
-                    Console.WriteLine("プレイヤーの人数を１人～４人から再入力してください >>>");
-                    continue;
-                }
-
-                int x1 = int.Parse(x);
+                int numberOfplayer1 = InputPlayerNumber();
 
                 var playerList = new List<Player>();
-                for (int i = 1; i <= x1; i++)
+                for (int i = 1; i <= numberOfplayer1; i++)
                 {
                     playerList.Add(new Userplayer());
                 }
 
                 Console.WriteLine("コンピュータの人数を１人～４人で選択してください>>>");
 
-                string y;
-                y = Console.ReadLine();
-                if (y == "1" || y == "2" || y == "3" || y == "4")
-                {
-                }
-                else
-                {
-                    Console.WriteLine("誤ったキーが選択されました");
-                    Console.WriteLine("プレイヤーの人数を１人～４人から再入力してください >>>");
-                    continue;
-                }
+                int numberOfcpu1 = InputPlayerNumber();
 
-                int y1 = int.Parse(y);
-
-                for (int i = 1; i <= y1; i++)
+                for (int i = 1; i <= numberOfcpu1; i++)
                 {
                     playerList.Add(new Cpuplayer());
                 }
@@ -67,174 +44,53 @@
                 bool aiko = false;
                 do
                 {
-                    for (int i = 1; i <= x1; i++)
-                    {
-                        Console.WriteLine("プレイヤー{0}", i);
-                        Console.WriteLine("1.グー, 2.チョキ, 3.パー");
-                        Console.WriteLine("1～3のいずれかを選択してください>>> ");
-                        bool miss = true;
-                        do
-                        {
-                            string handInput = Console.ReadLine();
-                            if (handInput == "1" || handInput == "2" || handInput == "3")
-                            {
-                                miss = false;
-                            }
-                            else
-                            {
-                                Console.WriteLine("誤ったキーが選択されました");
-                                Console.WriteLine("もう一度、1.グー, 2.チョキ, 3.パーから再入力してください >>>");
-                                continue;
-                            }
+                    InputUserHand(playerList, numberOfplayer1);
+                    InputCpuHand(playerList, numberOfplayer1, numberOfcpu1);
 
-                            int userHand = int.Parse(handInput);
-                            Player player = playerList[i - 1];
-                            player.Hand = userHand;
-                        }
-                        while (miss);
+                    bool guExist = handExist(playerList, グー);
+
+                    bool chokiExist = handExist(playerList, チョキ);
+
+                    bool paExist = handExist(playerList, パー);
+
+                    if (guExist && chokiExist && !paExist)
+                    {
+                        Judge(playerList, グー, csv, numberOfplayer1, numberOfcpu1);
+                        break;
                     }
-
-                    Random temp2 = new Random();
-                    for (int i = 1; i <= y1; i++)
+                    else if (guExist && !chokiExist && paExist)
                     {
-                        int cpuHand = temp2.Next(1, 4);
-                        Player player = playerList[x1 + i - 1];
-                        player.Hand = cpuHand;
+                        Judge(playerList, パー, csv, numberOfplayer1, numberOfcpu1);
+                        break;
                     }
-
-                    bool r1 = false;
-                    foreach (var hand in playerList)
+                    else if (!guExist && chokiExist && paExist)
                     {
-                        if (hand.Hand == Handlist.グー)
-                        {
-                            r1 = true;
-                            break;
-                        }
-                    }
-
-                    bool r2 = false;
-                    foreach (var hand in playerList)
-                    {
-                        if (hand.Hand == チョキ)
-                        {
-                            r2 = true;
-                            break;
-                        }
-                    }
-
-                    bool r3 = false;
-                    foreach (var hand in playerList)
-                    {
-                        if (hand.Hand == パー)
-                        {
-                            r3 = true;
-                            break;
-                        }
-                    }
-
-                    if (r1 == true && r2 == true && r3 == false)
-                    {
-                        aiko = false;
-                        for (int i = 1; i <= y1; i++)
-                        {
-                            Console.WriteLine("コンピュータ{0}は", i);
-                            Console.WriteLine("{0}", playerList[x1 + i - 1].Hand);
-                        }
-
-                        for (int i = 1; i <= x1; i++)
-                        {
-                            Console.WriteLine("プレイヤー{0}は", i);
-                            if (playerList[i - 1].Hand == グー)
-                            {
-                                Console.WriteLine("勝ちですヽ(〃v〃)ﾉ");
-                                Console.WriteLine("おめでとうございます！！");
-                            }
-                            else
-                            {
-                                Console.WriteLine("負けです (_　_|||)");
-                                Console.WriteLine("残念でした (>_<)");
-                            }
-                        }
-                    }
-                    else if (r1 == true && r2 == false && r3 == true)
-                    {
-                        aiko = false;
-                        for (int i = 1; i <= y1; i++)
-                        {
-                            Console.WriteLine("コンピュータ{0}は", i);
-                            Console.WriteLine("{0}", playerList[x1 + i - 1].Hand);
-                        }
-
-                        for (int i = 1; i <= x1; i++)
-                        {
-                            Console.WriteLine("プレイヤー{0}は", i);
-                            if (playerList[i - 1].Hand == パー)
-                            {
-                                Console.WriteLine("勝ちですヽ(〃v〃)ﾉ");
-                                Console.WriteLine("おめでとうございます！！");
-                            }
-                            else
-                            {
-                                Console.WriteLine("負けです (_　_|||)");
-                                Console.WriteLine("残念でした (>_<)");
-                            }
-                        }
-                    }
-                    else if (r1 == false && r2 == true && r3 == true)
-                    {
-                        aiko = false;
-                        for (int i = 1; i <= y1; i++)
-                        {
-                            Console.WriteLine("コンピュータ{0}は", i);
-                            Console.WriteLine("{0}", playerList[x1 + i - 1].Hand);
-                        }
-
-                        for (int i = 1; i <= x1; i++)
-                        {
-                            Console.WriteLine("プレイヤー{0}は", i);
-                            if (playerList[i - 1].Hand == チョキ)
-                            {
-                                Console.WriteLine("勝ちですヽ(〃v〃)ﾉ");
-                                Console.WriteLine("おめでとうございます！！");
-                            }
-                            else
-                            {
-                                Console.WriteLine("負けです (_　_|||)");
-                                Console.WriteLine("残念でした (>_<)");
-                            }
-                        }
+                        Judge(playerList, チョキ, csv, numberOfplayer1, numberOfcpu1);
+                        break;
                     }
                     else
                     {
+                        Aiko(playerList, numberOfplayer1, numberOfcpu1);
                         aiko = true;
-                        for (int i = 1; i <= y1; i++)
-                        {
-                            Console.WriteLine("コンピュータ{0}は", i);
-                            Console.WriteLine("{0}", playerList[x1 + i - 1].Hand);
-                        }
-
-                        Console.WriteLine("あいこです ( 'ω' )");
-                        Console.WriteLine("もう一度選んでください");
                     }
                 }
                 while (aiko);
+
+                csv.NextRecord();
+                csv.Dispose();
+                CsvwRead();
+
                 Console.WriteLine("もう一度じゃんけんを行う場合は 1 を押してください>>>");
                 Console.WriteLine("終了する場合は 0 を押してください>>>");
 
-                bool choice = true;
                 string temp4;
-                do
+
+                while (true)
                 {
                     temp4 = Console.ReadLine();
 
-                    if (temp4 == "1")
+                    if (temp4 == "1" || temp4 == "0")
                     {
-                        choice = false;
-                    }
-                    else if (temp4 == "0")
-                    {
-                        Console.WriteLine("終了します。お疲れ様でしたm(_ _)m");
-                        zokko = false;
                         break;
                     }
                     else
@@ -244,9 +100,170 @@
                         continue;
                     }
                 }
-                while (choice);
+
+                if (temp4 == "1")
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
             }
-            while (zokko);
+        }
+
+        private static bool handExist(List<Player> playerList, int targetHand)
+        {
+            foreach (var hand in playerList)
+            {
+                if (hand.Hand == targetHand)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void Judge(List<Player> playerList, int targetHand, CsvWriter csv, int numberOfplayer1, int numberOfcpu1)
+        {
+            for (int i = 1; i <= numberOfcpu1; i++)
+            {
+                Console.WriteLine("コンピュータ{0}は", i);
+                Console.WriteLine("{0}", playerList[numberOfplayer1 + i - 1].Hand);
+            }
+
+            int win = 0;
+            int lose = 0;
+
+            for (int i = 1; i <= numberOfplayer1; i++)
+            {
+                Console.WriteLine("プレイヤー{0}は", i);
+                if (playerList[i - 1].Hand == targetHand)
+                {
+                    Console.WriteLine("勝ちですヽ(〃v〃)ﾉ");
+                    Console.WriteLine("おめでとうございます！！");
+                    win = 1;
+                    lose = 0;
+                    csv.WriteField(win);
+                    csv.WriteField(lose);
+                }
+                else
+                {
+                    Console.WriteLine("負けです (_　_|||)");
+                    Console.WriteLine("残念でした (>_<)");
+                    win = 0;
+                    lose = 1;
+                    csv.WriteField(win);
+                    csv.WriteField(lose);
+                }
+            }
+
+            if (numberOfplayer1 != 4)
+            {
+                for (int i = numberOfplayer1 + 1; i <= 4; i++)
+                {
+                    win = 0;
+                    lose = 0;
+                    csv.WriteField(win);
+                    csv.WriteField(lose);
+                }
+            }
+        }
+
+        private static int InputPlayerNumber()
+        {
+            while (true)
+            {
+
+                string numberOfplayer;
+                numberOfplayer = Console.ReadLine();
+                if (numberOfplayer == "1" || numberOfplayer == "2" || numberOfplayer == "3" || numberOfplayer == "4")
+                {
+                    return int.Parse(numberOfplayer);
+                }
+                else
+                {
+                    Console.WriteLine("誤ったキーが選択されました");
+                    Console.WriteLine("人数を１人～４人から再入力してください >>>");
+                    continue;
+                }
+            }
+        }
+
+        private static void InputUserHand(List<Player> playerList, int numberOfplayer1)
+        {
+            for (int i = 1; i <= numberOfplayer1; i++)
+            {
+                Console.WriteLine("プレイヤー{0}", i);
+                Console.WriteLine("1.グー, 2.チョキ, 3.パー");
+                Console.WriteLine("1～3のいずれかを選択してください>>> ");
+                while (true)
+                {
+                    string handInput = Console.ReadLine();
+                    if (handInput == "1" || handInput == "2" || handInput == "3")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("誤ったキーが選択されました");
+                        Console.WriteLine("もう一度、1.グー, 2.チョキ, 3.パーから再入力してください >>>");
+                        continue;
+                    }
+
+                    int userHand = int.Parse(handInput);
+                    Player player = playerList[i - 1];
+                    player.Hand = userHand;
+                }
+            }
+        }
+
+        private static void InputCpuHand(List<Player> playerList, int numberOfplayer1, int numberOfcpu1)
+        {
+            Random temp2 = new Random();
+            for (int i = 1; i <= numberOfcpu1; i++)
+            {
+                int cpuHand = temp2.Next(1, 4);
+                Player player = playerList[numberOfplayer1 + i - 1];
+                player.Hand = cpuHand;
+            }
+        }
+
+        private static void Aiko(List<Player> playerList, int numberOfplayer1, int numberOfcpu1)
+        {
+            for (int i = 1; i <= numberOfcpu1; i++)
+            {
+                Console.WriteLine("コンピュータ{0}は", i);
+                Console.WriteLine("{0}", playerList[numberOfplayer1 + i - 1].Hand);
+            }
+
+            Console.WriteLine("あいこです ( 'ω' )");
+            Console.WriteLine("もう一度選んでください");
+        }
+
+        private static void CsvwRead()
+        {
+            Csvclass mul = new Csvclass();
+            string[] jkData = System.IO.File.ReadAllLines(@"C:\\dev\\csv\\jyanken.csv");
+            mul.MlutiColumns(jkData);
+            IEnumerable<IEnumerable<int>> multiColQuery =
+           from line in jkData
+           let elements = line.Split(',')
+           let jyanken = elements.Skip(0)
+           select from str in jyanken select Convert.ToInt32(str);
+            var results = multiColQuery.ToList();
+            int columnCount = results[0].Count();
+            for (int column = 0; column < columnCount; column = column + 2)
+            {
+                var results2 = from row in results
+                               select row.ElementAt(column);
+                double sum1 = results2.Sum();
+                var results3 = from row in results
+                               select row.ElementAt(column + 1);
+                double sum2 = results3.Sum();
+                Console.WriteLine("プレイヤー{0} {1}勝{2}敗　勝率{3:##.##}％", (column + 2) / 2, sum1, sum2, sum1 / (sum1 + sum2) * 100);
+            }
         }
     }
 }

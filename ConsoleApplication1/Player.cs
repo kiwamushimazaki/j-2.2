@@ -1,4 +1,8 @@
-﻿namespace ConsoleApplication1
+﻿// <copyright file="Player.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace ConsoleApplication1
 {
     using System;
     using System.Collections;

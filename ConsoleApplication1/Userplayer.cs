@@ -7,6 +7,9 @@
     using System.Text;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// プレイヤーの情報
+    /// </summary>
     internal class Userplayer : Player
     {
         public Userplayer(int hand)
