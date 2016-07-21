@@ -286,9 +286,7 @@ namespace ConsoleApplication1
         /// </summary>
         private static void CsvwRead()
         {
-            Csv mul = new Csv();
             string[] jkData = System.IO.File.ReadAllLines(@"C:\\dev\\csv\\jyanken.csv");
-            mul.MlutiColumns(jkData);
             IEnumerable<IEnumerable<int>> multiColQuery =
            from line in jkData
            let elements = line.Split(',')
@@ -300,10 +298,10 @@ namespace ConsoleApplication1
             {
                 var results2 = from row in results
                                select row.ElementAt(column);
-                double sum1 = results2.Sum();
+                decimal sum1 = results2.Sum();
                 var results3 = from row in results
                                select row.ElementAt(column + 1);
-                double sum2 = results3.Sum();
+                decimal sum2 = results3.Sum();
                 Console.WriteLine("プレイヤー{0} {1}勝{2}敗　勝率{3:##.##}％", (column + 2) / 2, sum1, sum2, sum1 / (sum1 + sum2) * 100);
             }
         }
