@@ -13,12 +13,12 @@ namespace ConsoleApplication1
     /// <summary>
     /// CSV読み込み用のクラス
     /// </summary>
-    internal class Csvclass
+    internal class Csv
     {
         /// <summary>
-        ///複数行の文字列
+        /// 複数行の文字列
         /// </summary>
-        /// <param name="strs"></param>
+        /// <param name="strs">プレイヤーごとの勝ち負けの文字列</param>
         public void MlutiColumns(IEnumerable<string> strs)
         {
         }

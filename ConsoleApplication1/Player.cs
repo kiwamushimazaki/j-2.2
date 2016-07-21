@@ -11,6 +11,9 @@ namespace ConsoleApplication1
     using System.Text;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// プレイヤー全体の基本情報を含むクラス
+    /// </summary>
     internal abstract class Player
     {
         private int hand;
