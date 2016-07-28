@@ -17,15 +17,11 @@ namespace ConsoleApplication1
     {
         private static void Main()
         {
-            const int グー = 1;
-            const int チョキ = 2;
-            const int パー = 3;
-
             Console.WriteLine("複数人じゃんけんゲーム");
             while (true)
             {
-                var append = true;
-                var csv = new CsvWriter(new StreamWriter("C:\\dev\\csv\\jyanken.csv", append));
+                var csv = new CsvWriter(new StreamWriter("C:\\dev\\csv\\jyanken.csv", true, System.Text.Encoding.GetEncoding(932)));
+
                 Console.WriteLine("プレイヤーの人数を１人～４人で選択してください>>>");
                 int numberOfuser1 = Input.InputPlayerNumber();
 
@@ -44,40 +40,40 @@ namespace ConsoleApplication1
                     playerList.Add(new Cpuplayer());
                 }
 
-                bool aiko = false;
-                do
+                while (true)
                 {
                     Input.InputUserHand(playerList, numberOfuser1);
                     Input.InputCpuHand(playerList, numberOfuser1, numberOfcpu1);
 
-                    bool guExist = Exist.HandExist(playerList, グー);
+                    bool guExist = Exist.HandExist(playerList, Handlist.グー);
+                    bool chokiExist = Exist.HandExist(playerList, Handlist.チョキ);
+                    bool paExist = Exist.HandExist(playerList, Handlist.パー);
 
-                    bool chokiExist = Exist.HandExist(playerList, チョキ);
+                    bool guWin = guExist && chokiExist && !paExist;
+                    bool chokiWin = guExist && !chokiExist && paExist;
+                    bool paWin = !guExist && chokiExist && paExist;
 
-                    bool paExist = Exist.HandExist(playerList, パー);
-
-                    if (guExist && chokiExist && !paExist)
+                    if (guWin)
                     {
-                        HandJudge.Judge(playerList, グー, csv, numberOfuser1, numberOfcpu1);
+                        HandJudge.Judge(playerList, Handlist.グー, csv, numberOfuser1, numberOfcpu1);
                         break;
                     }
-                    else if (guExist && !chokiExist && paExist)
+                    else if (chokiWin)
                     {
-                        HandJudge.Judge(playerList, パー, csv, numberOfuser1, numberOfcpu1);
+                        HandJudge.Judge(playerList, Handlist.パー, csv, numberOfuser1, numberOfcpu1);
                         break;
                     }
-                    else if (!guExist && chokiExist && paExist)
+                    else if (paWin)
                     {
-                        HandJudge.Judge(playerList, チョキ, csv, numberOfuser1, numberOfcpu1);
+                        HandJudge.Judge(playerList, Handlist.チョキ, csv, numberOfuser1, numberOfcpu1);
                         break;
                     }
                     else
                     {
                         Draw.Aiko(playerList, numberOfuser1, numberOfcpu1);
-                        aiko = true;
+                        continue;
                     }
                 }
-                while (aiko);
 
                 csv.NextRecord();
                 csv.Dispose();
@@ -91,8 +87,9 @@ namespace ConsoleApplication1
                 while (true)
                 {
                     temp4 = Console.ReadLine();
+                    bool correct = temp4 == "1" || temp4 == "0";
 
-                    if (temp4 == "1" || temp4 == "0")
+                    if (correct)
                     {
                         break;
                     }
@@ -104,7 +101,8 @@ namespace ConsoleApplication1
                     }
                 }
 
-                if (temp4 == "1")
+                bool rematch = temp4 == "1";
+                if (rematch)
                 {
                     continue;
                 }

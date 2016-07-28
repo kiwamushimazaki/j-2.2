@@ -40,7 +40,7 @@ namespace ConsoleApplication1
 
         /// <summary>
         /// ユーザーの手を決定するメソッド
-        /// </summary>
+        /// </summary
         /// <param name="playerList">ユーザーの選択した手の情報をまとめるリスト</param>
         /// <param name="numberOfuser1">ユーザーの人数</param>
         public static void InputUserHand(List<Player> playerList, int numberOfuser1)
@@ -50,13 +50,11 @@ namespace ConsoleApplication1
                 Console.WriteLine("プレイヤー{0}", i);
                 Console.WriteLine("1.グー, 2.チョキ, 3.パー");
                 Console.WriteLine("1～3のいずれかを選択してください>>> ");
-                bool user = true;
-                do
+                while (true)
                 {
                     string handInput = Console.ReadLine();
                     if (handInput == "1" || handInput == "2" || handInput == "3")
                     {
-                        user = false;
                     }
                     else
                     {
@@ -68,8 +66,8 @@ namespace ConsoleApplication1
                     int userHand = int.Parse(handInput);
                     Player player = playerList[i - 1];
                     player.Hand = userHand;
+                    break;
                 }
-                while (user);
             }
         }
 
