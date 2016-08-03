@@ -48,7 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractCreator.cs" />
+    <Compile Include="CpuCreator.cs" />
     <Compile Include="Cpuplayer.cs" />
+    <Compile Include="CreateCreator.cs" />
     <Compile Include="Csv.cs" />
     <Compile Include="Draw.cs" />
     <Compile Include="Exist.cs" />
@@ -58,6 +61,7 @@
     <Compile Include="MainClass.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserCreator.cs" />
     <Compile Include="Userplayer.cs" />
   </ItemGroup>
   <ItemGroup>

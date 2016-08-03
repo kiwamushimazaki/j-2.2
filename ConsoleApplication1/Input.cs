@@ -40,7 +40,7 @@ namespace ConsoleApplication1
 
         /// <summary>
         /// ユーザーの手を決定するメソッド
-        /// </summary
+        /// </summary>
         /// <param name="playerList">ユーザーの選択した手の情報をまとめるリスト</param>
         /// <param name="numberOfuser1">ユーザーの人数</param>
         public static void InputUserHand(List<Player> playerList, int numberOfuser1)

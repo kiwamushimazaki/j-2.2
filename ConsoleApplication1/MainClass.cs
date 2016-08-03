@@ -26,18 +26,25 @@ namespace ConsoleApplication1
                 int numberOfuser1 = Input.InputPlayerNumber();
 
                 var playerList = new List<Player>();
+
+                // Player user = new Userplayer();
+                // AbstractCreator creator = new UserCreator();
+                // Player player = creator.Create();
+                var playercreator = new CreateCreator();
+
                 for (int i = 1; i <= numberOfuser1; i++)
                 {
-                    playerList.Add(new Userplayer());
+                    Player userplayer = playercreator.CreatePlayer("user");
+                    playerList.Add(userplayer);
                 }
 
                 Console.WriteLine("コンピュータの人数を１人～４人で選択してください>>>");
-
                 int numberOfcpu1 = Input.InputPlayerNumber();
 
                 for (int i = 1; i <= numberOfcpu1; i++)
                 {
-                    playerList.Add(new Cpuplayer());
+                    Player cpuplayer = playercreator.CreatePlayer("cpu");
+                    playerList.Add(cpuplayer);
                 }
 
                 while (true)
